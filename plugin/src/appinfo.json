@@ -1,0 +1,16 @@
+{
+	"id": "com.kyrus.junkvncplugin",
+	"version": "0.0.6",
+	"vendor": "junk",
+	"type": "pdk",
+	"main": "junkvnc_plugin",
+	"title": "junkvnc_plugin",
+	"icon": "icon.png",
+	"requiredMemory": 12,
+	"keywords": [
+		"VNC",
+		"Remote Desktop",
+		"Remote Control",
+		"Virtual Network Client"
+	]
+}

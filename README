@@ -1,0 +1,21 @@
+junkVNC
+--------------
+
+A VNC client for webOS
+
+Based on VNC Client PDK
+(C) 2010-2011 Bernhard Slawik Digital, http://www.bernhardslawik.de
+
+Based on SDL_vnc by Andreas Schiffer, released under LGPL, see SDL_vnc/LICENSE
+
+
+TODO
+----
+
+* CtrlaAlt+Del to log on to windows systems!
+* keymapping even more keyes not on touchpad keyboard
+* right click
+* pinch to zoom
+* paused when in card mode
+* better way to get dimensions for the plugin
+* get it working on phones

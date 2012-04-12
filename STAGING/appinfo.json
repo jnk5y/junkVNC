@@ -1,0 +1,11 @@
+{
+	"id": "com.kyrus.junkvnc",
+	"version": "0.0.1",
+	"vendor": "johnkyrus",
+	"type": "web",
+	"main": "index.html",
+	"icon": "icon.png",
+	"title": "junkVNC",
+	"uiRevision": 2,
+	"plug-ins": true
+}

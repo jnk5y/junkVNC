@@ -1,0 +1,202 @@
+
+SDL_vnc - SDL VNC Client library
+=============================================================================
+
+Intro
+-----
+
+The SDL_vnc library was created to offer a VNC client system that:
+- is LGPL licensed and can be used in commercial applications
+- integrates with SDL (framebuffer is a SDL surface)
+- IO and processing runs as a thread, so it does not interfere 
+  with a traditional "game loop"
+
+Use the author's homepage at http://www.ferzkopp.net for the most up-to-date
+contact information.
+
+This library is licenced under the LGPL, see the file LICENSE for details. 
+
+
+Supported Platforms
+-------------------
+
+The library compiles and is tested on a Linux target with a
+TightVNC server running on windows.
+
+
+Installation and Test
+---------------------
+
+To compile the library your need the SDL 1.2 installed from source or 
+installed with the 'devel' RPM package. For example on Mandrake, run:
+	urpmi libSDL1.2-devel
+
+The run
+	./autogen.sh	(optional)
+	./configure
+	make
+	make install
+	ldconfig
+
+to compile and install the library. The default location for the 
+installation is /usr/local/lib and /usr/local/include. The libary 
+path /usr/local/lib might need to be added to the file
+	/etc/ld.so.conf
+Then run ldconfig again.
+
+
+API and Usage
+-------------
+
+int vncConnect(tSDL_vnc *vnc, char *host, int port, char *mode, char *password, int framerate);
+
+  Connect to VNC server 
+
+  Parameters
+   vnc  = pointer to tSDL_vnc structure
+   host = hostname or hostip
+   port = port
+   mode = submode,submode,...
+    submode =	raw | 
+    		copyrect | 
+    		rre | 
+    		corre(broken) |
+    		hextile | 
+    		zrle(unimplemented) | 
+    		cursor | 
+    		desktop(unimplemented)
+   password = text
+   framerate = 1 to 100
+
+  Notes;
+   - Returns 1 if connection was established, 0 otherwise.
+   - This call will establish a connection to the VNC server requesting a 32bit transfer.
+   - framerate is the rate in which update requests are send to the server.
+
+
+ 
+int vncBlitFramebuffer(tSDL_vnc *vnc, SDL_Surface *target, SDL_Rect *urec);
+
+ Blit current framebuffer to target
+
+ Parameters
+  vnc = pointer to tSDL_vnc structure
+  target = target surface to blit framebuffer to
+  urec = pointer to SDL_Rect structure to receive updated area, can be NULL
+
+  Notes:
+   - Returns 1 if the blit occured, 0 otherwise.
+   - Only blits if framebuffer exists and was updated. 
+   - Updated region is stored in urec if it is not NULL.
+   - Framebuffer is a RGB surface.
+
+
+ 
+int vncBlitCursor(tSDL_vnc *vnc, SDL_Surface *target, SDL_Rect *trec);
+
+  Blit current cursor to target
+
+  Parameters
+   vnc = pointer to tSDL_vnc structure
+   target = target surface to blit cursoe to
+   trec = pointer to SDL_Rect structure to receive updated area, can be NULL
+ 
+  Notes
+   - Returns 1 if blit occured, 0 otherwise 
+   - Blitting is at the trec position.
+   - Cursor image is a 32x32 RGBA image (with A set).
+
+
+
+
+SDL_Rect vncCursorHotspot(tSDL_vnc *vnc);
+
+
+
+  Parameters
+   vnc = pointer to tSDL_vnc structure
+
+  Notes: 
+   - In the returned parameter, only .x and .y are used.
+
+
+
+int vncClientKeyevent(tSDL_vnc *vnc, unsigned char downflag, unsigned int key);
+int vncClientPointerevent(tSDL_vnc *vnc, unsigned char buttonmask, unsigned short x, unsigned short y);
+
+  Send keyboard and pointer events to server
+
+  Parameters
+   vnc = pointer to tSDL_vnc structure
+   downflag = 1 for key is down, 0 for key is up
+   key = VNC keycode (basically X11/keysymdef.h plus some special codes)
+   buttonmask = VNC mousebutton bitmask 1=left, 2-=middle, 4=right, 8/16=wheel
+   x,y = mouse position
+
+  Notes:
+   - The client is responsible for key-code conversions into the VNC format.
+
+
+
+void vncDisconnect(tSDL_vnc *vnc);
+
+  Disconnect from vnc server
+
+  Parameters
+   vnc = pointer to tSDL_vnc structure
+
+  Notes:
+   - Closes socket connection and kills client thread. 
+
+
+Test Program
+------------
+
+Change to the ./Test directory and run
+	./configure
+	make
+to creates a VNC client program. Run
+	./TestVNC -help
+
+Typically one connects to a VNC server like this:
+
+	./TestVNC -server myserver -password mypass
+
+
+Also see the source code TestVNC.c for sample code on how to 
+create a simple VNC client.
+
+
+Development and To-Do
+---------------------
+
+One can edit the SDL_vnc.c code to enable extensive debugging by setting the
+DEBUG flag.
+
+TODO:
+- Add function to query server framebuffer size after connect.
+- Fix CoRRE code
+- Implement Desktop pseudoencoding
+- Implement Bell (as callback)
+- Implement ClientCutText
+- Implement ZRLE protocol
+- Implement tight protocol and options (zlib,tight,zlibhex)
+  (Anyone hve the specs for this?)
+- Improved speed and interactive response
+  (Implement a threaded socket reader. Check all code for optimizations.)
+  ('vncviewer' feels a lot faster and more interactive.)
+- Create proper SDL_keysym --> VNC key conversion routine.
+- Add local-cursor sample code to TestVNC program.
+
+
+Thanks
+------
+
+Thanks to 'AppWares Development Group' for supporting this project.
+
+
+
+Contributors
+------------
+
+* None so far. Want to be the first one ...??? Get coding!
